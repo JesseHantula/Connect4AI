@@ -1,14 +1,16 @@
-import ui.BoardPanel;
-import ui.StartScreen;
-
-import javax.swing.SwingUtilities;
+import core.GameManager;
 
 public class MainApp {
     public MainApp() {
 
     }
     public static void main(String[] args) {
-        StartScreen startScreen = new StartScreen();
-        startScreen.createStartScreen();
+        GameManager gameManager = new GameManager(0);
+
+        startGameLoop(gameManager);
+    }
+
+    private static void startGameLoop(GameManager gameManager) {
+        gameManager.update();
     }
 }
