@@ -53,7 +53,7 @@ public class Game {
                     if (square == curr)
                         streak++;
                     else {
-                        streak = 0;
+                        streak = 1;
                         curr = square;
                     }
                 }
@@ -82,7 +82,7 @@ public class Game {
                     if (ints[col] == curr)
                         streak++;
                     else {
-                        streak = 0;
+                        streak = 1;
                         curr = ints[col];
                     }
                 }
