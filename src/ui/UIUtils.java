@@ -19,11 +19,9 @@ public class UIUtils {
         return button;
     }
 
-    public static JFrame resetScreen(JFrame screen) {
+    public static void resetScreen(JFrame screen) {
         screen.getContentPane().removeAll();
         screen.revalidate();
         screen.repaint();
-
-        return screen;
     }
 }
