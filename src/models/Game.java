@@ -79,17 +79,17 @@ public class Game {
                     curr = ints[col];
                     streak = 1;
                 } else {
-                    if (ints[col] == curr)
+                    if (ints[col] == curr) {
                         streak++;
-                    else {
+                        if (streak == 4) {
+                            winner = curr;
+                            return true;
+                        }
+                    } else {
                         streak = 1;
                         curr = ints[col];
                     }
                 }
-            }
-            if (streak == 4) {
-                winner = curr;
-                return true;
             }
         }
         return false;

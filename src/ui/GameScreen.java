@@ -1,24 +1,17 @@
 package ui;
 
-import constants.Constants;
 import core.GameManager;
 import models.Game;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -48,7 +41,7 @@ public class GameScreen extends JPanel {
         this.started = false;
     }
 
-    public void updatePlayerMove() {
+    public void initBoard() {
         UIUtils.resetScreen(screen);
 
         JPanel panel = (JPanel) screen.getContentPane();
@@ -62,12 +55,10 @@ public class GameScreen extends JPanel {
             buttons[i] = new JButton(String.valueOf(i + 1));
             buttons[i].setActionCommand(String.valueOf(i));
             buttons[i].addActionListener(
-                    new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            int col = Integer.parseInt(e.getActionCommand());
-                            piecePlaced(col, gameManager.getPlayerTurn());
+                    e -> {
+                        int col = Integer.parseInt(e.getActionCommand());
+                        if (piecePlaced(col, gameManager.getPlayerTurn()))
                             gameManager.gameLoop(GameScreen.this);
-                        }
                     });
             panel.add(buttons[i]);
         }
@@ -84,13 +75,15 @@ public class GameScreen extends JPanel {
         screen.setVisible(true);
     }
 
-    public void piecePlaced(Integer column, boolean isPlayer) {
+    public boolean piecePlaced(Integer column, boolean isPlayer) {
         int row = game.findLowestEmptyRow(column);
         if (row != -1) {
             gameBoard[row][column] = isPlayer ? gameManager.getPlayerNumber() : gameManager.getAiNumber();
             game.setGameBoard(gameBoard);
             gameManager.setPlayerTurn(!isPlayer);
+            return true;
         }
+        return false;
     }
 
     public void updateBoard() {
@@ -109,7 +102,7 @@ public class GameScreen extends JPanel {
             }
         }
         else {
-            updatePlayerMove();
+            initBoard();
         }
     }
 
@@ -120,7 +113,11 @@ public class GameScreen extends JPanel {
             GameManager manager = new GameManager(0);
             manager.update();
         }
+        else {
+            screen.dispose();
+        }
     }
+
 
     public void winnerPopup(boolean playerWinner) {
         int choice;
@@ -132,6 +129,9 @@ public class GameScreen extends JPanel {
         if (choice == JOptionPane.YES_OPTION) {
             GameManager manager = new GameManager(0);
             manager.update();
+        }
+        else {
+            screen.dispose();
         }
     }
 }

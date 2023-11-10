@@ -52,6 +52,7 @@ public class GameManager {
     public void setPlayerTurn(Boolean newPlayerTurn) {
         playerTurn = newPlayerTurn;
     }
+
     public boolean getPlayerTurn() { return playerTurn; }
 
     public void update() {
@@ -64,10 +65,8 @@ public class GameManager {
             GameScreen gameScreen = new GameScreen(screen, 6, 7, 150, this, game);
             ai = game.getAi();
 
+            gameScreen.initBoard();
             gameLoop(gameScreen);
-        }
-        else if (state == 2) {
-
         }
     }
 
@@ -77,12 +76,17 @@ public class GameManager {
             handleEnd(gameScreen);
         }
         else if (playerTurn) {
-            gameScreen.updatePlayerMove();
+            gameScreen.initBoard();
         }
         else {
             int col = ai.calculate(game.getGameBoard());
-            gameScreen.piecePlaced(col, getPlayerTurn());
-            gameScreen.updateBoard();
+            if (!gameScreen.piecePlaced(col, getPlayerTurn()))
+                gameLoop(gameScreen);
+            else {
+                if (game.endGame())
+                    gameLoop(gameScreen);
+                gameScreen.updateBoard();
+            }
         }
     }
 
