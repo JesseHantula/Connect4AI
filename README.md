@@ -12,3 +12,4 @@ To run the project, simply clone the repository, navigate to the src directory, 
 
 Weekly reports:
 - [Week 1](./documentation/Week1Report.md)
+- [Week 2](./documentation/Week2Report.md)
