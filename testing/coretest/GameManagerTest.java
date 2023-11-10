@@ -1,2 +1,4 @@
-package coretest;public class GameManagerTest {
+package coretest;
+
+public class GameManagerTest {
 }

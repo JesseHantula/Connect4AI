@@ -1,2 +1,4 @@
-package modelstest;public class GameTest {
+package modelstest;
+
+public class GameTest {
 }

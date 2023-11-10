@@ -1,2 +1,4 @@
-package modelstest;public class AITest {
+package modelstest;
+
+public class AITest {
 }
