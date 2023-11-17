@@ -1,4 +1,4 @@
-package coretest;
+package modelstest;
 
 import models.AI;
 import models.Game;
@@ -41,8 +41,8 @@ public class GameTest {
                 {0, 0, 0, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0},
-                {0, 1, 1, 1, 1, 1, 0}
+                {2, 0, 0, 0, 0, 0, 0},
+                {2, 1, 1, 1, 1, 2, 0}
         };
         game.setGameBoard(rowWinner);
         assertTrue(game.rowWinner());
@@ -52,11 +52,11 @@ public class GameTest {
     public void testColumnWinner() {
         int[][] columnWinner = {
                 {0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0},
                 {0, 1, 0, 0, 0, 0, 0},
                 {0, 1, 0, 0, 0, 0, 0},
                 {0, 1, 0, 0, 0, 0, 0},
-                {0, 1, 0, 0, 0, 0, 0}
+                {2, 1, 0, 0, 0, 0, 0},
+                {1, 2, 2, 2, 0, 0, 0}
         };
         game.setGameBoard(columnWinner);
         assertTrue(game.columnWinner());
@@ -74,5 +74,94 @@ public class GameTest {
         };
         game.setGameBoard(diagonalWinner);
         assertTrue(game.diagonalWinner());
+
+        int[][] diagonalWinner2 = {
+                {0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0},
+                {0, 1, 0, 0, 0, 0, 0},
+                {0, 0, 1, 0, 0, 0, 0},
+                {0, 0, 0, 1, 0, 0, 0},
+                {0, 0, 0, 0, 1, 0, 0}
+        };
+        game.setGameBoard(diagonalWinner2);
+        assertTrue(game.diagonalWinner());
+    }
+
+    @Test
+    public void testFullGame() {
+        int[][] fullGame = {
+                {2, 2, 1, 1, 2, 2, 1},
+                {1, 1, 2, 2, 2, 1, 1},
+                {1, 1, 1, 2, 1, 2, 1},
+                {2, 2, 2, 1, 1, 1, 2},
+                {1, 2, 1, 1, 2, 2, 2},
+                {1, 1, 2, 2, 1, 1, 1}
+        };
+        game.setGameBoard(fullGame);
+        assertTrue(game.fullGame());
+    }
+
+    @Test
+    public void testWonGame() {
+        int[][] winner = {
+                {0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0},
+                {0, 1, 1, 1, 1, 1, 0}
+        };
+        game.setGameBoard(winner);
+        assertTrue(game.winGame());
+    }
+
+    @Test
+    public void testEndGame() {
+        int[][] gameEnder = {
+                {0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0},
+                {0, 1, 1, 1, 1, 1, 0}
+        };
+        game.setGameBoard(gameEnder);
+        assertTrue(game.endGame());
+    }
+
+    @Test
+    public void testGetWinner() {
+        int[][] winner = {
+                {0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0},
+                {0, 1, 1, 1, 1, 1, 0}
+        };
+        game.setGameBoard(winner);
+        game.winGame();
+        assertEquals(1, game.getWinner());
+    }
+
+    @Test
+    public void testLowestRow() {
+        int[][] board = {
+                {0, 1, 0, 0, 0, 0, 0},
+                {0, 1, 0, 0, 0, 0, 0},
+                {0, 1, 0, 0, 0, 0, 0},
+                {0, 1, 0, 0, 0, 0, 0},
+                {0, 1, 0, 0, 0, 0, 0},
+                {0, 1, 0, 1, 1, 1, 0}
+        };
+        game.setGameBoard(board);
+        int col1 = game.findLowestEmptyRow(0);
+        assertEquals(col1, 5);
+
+        int col2 = game.findLowestEmptyRow(1);
+        assertEquals(col2, -1);
+
+        int col3 = game.findLowestEmptyRow(3);
+        assertEquals(col3, 4);
     }
 }
