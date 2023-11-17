@@ -1,4 +1,4 @@
-package modelstest;
+package coretest;
 
 public class AITest {
 }

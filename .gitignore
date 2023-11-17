@@ -2,4 +2,5 @@
 out/
 
 # Ignore the htmlReport directory
-htmlReport/
+htmlReport/*
+!htmlreport/index.html
