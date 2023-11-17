@@ -1,2 +1,5 @@
 # Ignore the "out" directory
 out/
+
+# Ignore the htmlReport directory
+htmlReport/
