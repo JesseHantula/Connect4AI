@@ -1,5 +1,6 @@
 package core;
 
+import constants.Constants;
 import models.AI;
 import models.Game;
 import ui.GameScreen;
@@ -19,20 +20,9 @@ public class GameManager {
 
     public GameManager(Integer startState) {
         this.state = startState;
-        this.screen = new JFrame("Connect 4");
+        this.screen = new JFrame(Constants.gameTitle);
         this.playerNumber = 0;
         this.screen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        this.screen.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                System.exit(0);
-            }
-        });
-    }
-
-    public int getState() {
-        return state;
     }
 
     public void setState(Integer newState) {
@@ -56,31 +46,31 @@ public class GameManager {
     public boolean getPlayerTurn() { return playerTurn; }
 
     public void update() {
-        if (state == 0) {
+        if (state == 0) { //state 0 indicates the start screen should be launched
             StartScreen startScreen = new StartScreen(screen, this);
             startScreen.createStartScreen();
         }
-        else if (state == 1) {
-            game = new Game(playerNumber);
-            GameScreen gameScreen = new GameScreen(screen, 6, 7, 150, this, game);
+        else if (state == 1) { //state 1 indicates the game has started and the game screen should be launced
+            game = new Game(playerNumber); //makes a new game with player number
+            GameScreen gameScreen = new GameScreen(screen, 6, 7, this, game);
             ai = game.getAi();
 
-            gameScreen.initBoard();
-            gameLoop(gameScreen);
+            gameScreen.initBoard(); //initializes the game board
+            gameLoop(gameScreen); //calls the main game loop
         }
     }
 
     public void gameLoop(GameScreen gameScreen) {
-        if (game.endGame()) {
-            gameScreen.updateBoard();
+        if (game.endGame()) { //check to see if the game has ended via draw or win
+            gameScreen.updateBoard(); //update game board before handling the end
             handleEnd(gameScreen);
         }
-        else if (playerTurn) {
+        else if (playerTurn) { //this method is only called at the beginning of the game
             gameScreen.initBoard();
         }
         else {
-            int col = ai.calculate(game.getGameBoard());
-            if (!gameScreen.piecePlaced(col, getPlayerTurn()))
+            int col = ai.calculate(game.getGameBoard()); //get the column that the AI chose
+            if (!gameScreen.piecePlaced(col, getPlayerTurn())) //this method will not be needed once AI is good
                 gameLoop(gameScreen);
             else {
                 if (game.endGame())
@@ -91,10 +81,10 @@ public class GameManager {
     }
 
     public void handleEnd(GameScreen gameScreen) {
-        if (game.fullGame())
+        if (game.fullGame()) //check to see if the game ended in a draw (the game board is full)
             gameScreen.drawPopup();
-        else {
-            gameScreen.winnerPopup(game.getWinner() == getPlayerNumber());
+        else { //if the game did not end in a draw, there was a winner
+            gameScreen.winnerPopup(game.getWinner() == getPlayerNumber()); //check if player or AI won
         }
     }
 }

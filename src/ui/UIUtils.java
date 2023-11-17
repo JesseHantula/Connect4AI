@@ -5,7 +5,7 @@ import javax.swing.JFrame;
 import java.awt.Color;
 import java.awt.Dimension;
 
-public class UIUtils {
+public class UIUtils { //class that has useful static methods for the UI
 
     public UIUtils() {
 

@@ -5,7 +5,6 @@ public class Game {
     public int aiNumber;
     public int[][] gameBoard;
     public int numRows;
-    public int numCols;
     public AI ai;
     public int winner;
 
@@ -13,7 +12,6 @@ public class Game {
         this.playerNumber = playerNumber;
         this.aiNumber = playerNumber == 1 ? 2 : 1;
         this.numRows = 6;
-        this.numCols = 7;
         this.gameBoard = new int[6][7];
         this.ai = new AI(aiNumber);
     }
@@ -38,7 +36,7 @@ public class Game {
 
     public int getWinner() { return winner; }
 
-    public boolean rowWinner() {
+    public boolean rowWinner() { //check to see if a game has been won via 4 consecutive pieces in a row
         for (int[] row : gameBoard) {
             int streak = 0;
             int curr = 0;
@@ -66,7 +64,7 @@ public class Game {
         return false;
     }
 
-    public boolean columnWinner() {
+    public boolean columnWinner() { //check to see if a game has been won via 4 consecutive pieces in a column
         int cols = gameBoard[0].length;
         for (int col = 0; col < cols; col++) {
             int streak = 0;
@@ -95,7 +93,7 @@ public class Game {
         return false;
     }
 
-    public boolean diagonalWinner() {
+    public boolean diagonalWinner() { //check to see if a game has been won via 4 consecutive pieces in a diagonal
         int rows = gameBoard.length;
         int cols = gameBoard[0].length;
 
@@ -126,7 +124,7 @@ public class Game {
         return false;
     }
 
-    public boolean fullGame() {
+    public boolean fullGame() { //check to see if the gameboard is full
         for (int[] row : gameBoard) {
             for (int square : row) {
                 if (square == 0)
@@ -136,12 +134,12 @@ public class Game {
         return true;
     }
 
-    public int findLowestEmptyRow(int col) {
+    public int findLowestEmptyRow(int col) { //find the lowest empty row for a column
         for (int row = numRows - 1; row >= 0; row--) {
             if (gameBoard[row][col] == 0) {
                 return row;
             }
         }
-        return -1;
+        return -1; //return -1 if the column is full
     }
 }

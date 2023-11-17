@@ -3,8 +3,8 @@ package models;
 import java.util.Random;
 
 public class AI {
-
     public int aiNumber;
+
     public AI(Integer aiNumber) {
         this.aiNumber = aiNumber;
     }

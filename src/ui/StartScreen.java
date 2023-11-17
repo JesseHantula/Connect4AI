@@ -19,7 +19,7 @@ public class StartScreen {
         this.gameManager = gameManager;
     }
 
-    public void createStartScreen() {
+    public void createStartScreen() { //method to initialize the start screen
         startScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         startScreen.setSize(Constants.startScreenWidth, Constants.startScreenHeight);
         startScreen.setLocationRelativeTo(null);
@@ -53,14 +53,14 @@ public class StartScreen {
         startScreen.setVisible(true);
     }
 
-    private void redButtonClicked() {
+    private void redButtonClicked() { //if player chooses red button (player 1)
         gameManager.setPlayerNumber(1);
         gameManager.setPlayerTurn(true);
         gameManager.setState(1);
         gameManager.update();
     }
 
-    private void blueButtonClicked() {
+    private void blueButtonClicked() { //if player chooses blue button (player 2)
         gameManager.setPlayerNumber(2);
         gameManager.setPlayerTurn(false);
         gameManager.setState(1);
