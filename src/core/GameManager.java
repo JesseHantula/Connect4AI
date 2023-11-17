@@ -7,8 +7,6 @@ import ui.GameScreen;
 import ui.StartScreen;
 
 import javax.swing.JFrame;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 public class GameManager {
     public int state;
