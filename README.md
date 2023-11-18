@@ -9,6 +9,7 @@ To run the project, simply clone the repository, navigate to the src directory, 
 ### Documentation
 
 - [Project Specification](./documentation/ProjectSpecification.md)
+- [User Guide](./documentation/UserGuide.md)
 
 Weekly reports:
 - [Week 1](./documentation/Week1Report.md)
