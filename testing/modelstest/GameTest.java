@@ -44,8 +44,7 @@ public class GameTest {
                 {2, 0, 0, 0, 0, 0, 0},
                 {2, 1, 1, 1, 1, 2, 0}
         };
-        game.setGameBoard(rowWinner);
-        assertTrue(game.rowWinner());
+        assertTrue(game.rowWinner(rowWinner));
     }
 
     @Test
@@ -58,8 +57,7 @@ public class GameTest {
                 {2, 1, 0, 0, 0, 0, 0},
                 {1, 2, 2, 2, 0, 0, 0}
         };
-        game.setGameBoard(columnWinner);
-        assertTrue(game.columnWinner());
+        assertTrue(game.columnWinner(columnWinner));
     }
 
     @Test
@@ -72,8 +70,7 @@ public class GameTest {
                 {0, 0, 1, 0, 0, 0, 0},
                 {0, 1, 0, 0, 0, 0, 0}
         };
-        game.setGameBoard(diagonalWinner);
-        assertTrue(game.diagonalWinner());
+        assertTrue(game.diagonalWinner(diagonalWinner));
 
         int[][] diagonalWinner2 = {
                 {0, 0, 0, 0, 0, 0, 0},
@@ -83,8 +80,7 @@ public class GameTest {
                 {0, 0, 0, 1, 0, 0, 0},
                 {0, 0, 0, 0, 1, 0, 0}
         };
-        game.setGameBoard(diagonalWinner2);
-        assertTrue(game.diagonalWinner());
+        assertTrue(game.diagonalWinner(diagonalWinner2));
     }
 
     @Test
@@ -97,8 +93,7 @@ public class GameTest {
                 {1, 2, 1, 1, 2, 2, 2},
                 {1, 1, 2, 2, 1, 1, 1}
         };
-        game.setGameBoard(fullGame);
-        assertTrue(game.fullGame());
+        assertTrue(game.fullGame(fullGame));
     }
 
     @Test
@@ -111,8 +106,7 @@ public class GameTest {
                 {0, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 0}
         };
-        game.setGameBoard(winner);
-        assertTrue(game.winGame());
+        assertTrue(game.winGame(winner));
     }
 
     @Test
@@ -125,8 +119,7 @@ public class GameTest {
                 {0, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 0}
         };
-        game.setGameBoard(gameEnder);
-        assertTrue(game.endGame());
+        assertTrue(game.endGame(gameEnder));
     }
 
     @Test
@@ -139,8 +132,7 @@ public class GameTest {
                 {0, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 0}
         };
-        game.setGameBoard(winner);
-        game.winGame();
+        game.winGame(winner);
         assertEquals(1, game.getWinner());
     }
 
@@ -155,13 +147,13 @@ public class GameTest {
                 {0, 1, 0, 1, 1, 1, 0}
         };
         game.setGameBoard(board);
-        int col1 = game.findLowestEmptyRow(0);
+        int col1 = game.findLowestEmptyRow(game.getGameBoard(), 0);
         assertEquals(col1, 5);
 
-        int col2 = game.findLowestEmptyRow(1);
+        int col2 = game.findLowestEmptyRow(game.getGameBoard(), 1);
         assertEquals(col2, -1);
 
-        int col3 = game.findLowestEmptyRow(3);
+        int col3 = game.findLowestEmptyRow(game.getGameBoard(), 3);
         assertEquals(col3, 4);
     }
 }

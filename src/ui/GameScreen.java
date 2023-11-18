@@ -69,7 +69,7 @@ public class GameScreen extends JPanel {
     }
 
     public boolean piecePlaced(Integer column, boolean isPlayer) { //method for updating board when a piece is placed
-        int row = game.findLowestEmptyRow(column);
+        int row = game.findLowestEmptyRow(gameBoard, column);
         if (row != -1) {
             gameBoard[row][column] = isPlayer ? gameManager.getPlayerNumber() : gameManager.getAiNumber();
             game.setGameBoard(gameBoard);

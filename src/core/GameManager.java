@@ -59,7 +59,7 @@ public class GameManager {
     }
 
     public void gameLoop(GameScreen gameScreen) {
-        if (game.endGame()) { //check to see if the game has ended via draw or win
+        if (game.endGame(game.getGameBoard())) { //check to see if the game has ended via draw or win
             gameScreen.updateBoard(); //update game board before handling the end
             handleEnd(gameScreen);
         }
@@ -67,11 +67,11 @@ public class GameManager {
             gameScreen.initBoard();
         }
         else {
-            int col = ai.calculate(game.getGameBoard()); //get the column that the AI chose
+            int col = ai.calculate(game); //get the column that the AI chose
             if (!gameScreen.piecePlaced(col, getPlayerTurn())) //this method will not be needed once AI is good
                 gameLoop(gameScreen);
             else {
-                if (game.endGame())
+                if (game.endGame(game.getGameBoard()))
                     gameLoop(gameScreen);
                 gameScreen.updateBoard();
             }
@@ -79,7 +79,7 @@ public class GameManager {
     }
 
     public void handleEnd(GameScreen gameScreen) {
-        if (game.fullGame()) //check to see if the game ended in a draw (the game board is full)
+        if (game.fullGame(game.getGameBoard())) //check to see if the game ended in a draw (the game board is full)
             gameScreen.drawPopup();
         else { //if the game did not end in a draw, there was a winner
             gameScreen.winnerPopup(game.getWinner() == getPlayerNumber()); //check if player or AI won
