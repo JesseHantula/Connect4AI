@@ -1,13 +1,22 @@
 package modelstest;
 
+import core.GameManager;
 import models.AI;
 import models.Game;
+import models.Pair;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class GameTest {
     private Game game;
+    private GameManager gameManager;
 
     @Before
     public void setUp() {
@@ -44,7 +53,9 @@ public class GameTest {
                 {2, 0, 0, 0, 0, 0, 0},
                 {2, 1, 1, 1, 1, 2, 0}
         };
-        assertTrue(game.rowWinner(rowWinner));
+        Pair lastPlacedPiece = new Pair(5, 1);
+        int winner = game.rowWinner(rowWinner, lastPlacedPiece);
+        assertEquals(winner, 1);
     }
 
     @Test
@@ -57,7 +68,9 @@ public class GameTest {
                 {2, 1, 0, 0, 0, 0, 0},
                 {1, 2, 2, 2, 0, 0, 0}
         };
-        assertTrue(game.columnWinner(columnWinner));
+        Pair lastPlacedPiece = new Pair(1, 1);
+        int winner = game.columnWinner(columnWinner, lastPlacedPiece);
+        assertEquals(winner, 1);
     }
 
     @Test
@@ -70,7 +83,8 @@ public class GameTest {
                 {0, 0, 1, 0, 0, 0, 0},
                 {0, 1, 0, 0, 0, 0, 0}
         };
-        assertTrue(game.diagonalWinner(diagonalWinner));
+        int winner = game.diagonalWinner(diagonalWinner);
+        assertEquals(winner, 1);
 
         int[][] diagonalWinner2 = {
                 {0, 0, 0, 0, 0, 0, 0},
@@ -80,20 +94,8 @@ public class GameTest {
                 {0, 0, 0, 1, 0, 0, 0},
                 {0, 0, 0, 0, 1, 0, 0}
         };
-        assertTrue(game.diagonalWinner(diagonalWinner2));
-    }
-
-    @Test
-    public void testFullGame() {
-        int[][] fullGame = {
-                {2, 2, 1, 1, 2, 2, 1},
-                {1, 1, 2, 2, 2, 1, 1},
-                {1, 1, 1, 2, 1, 2, 1},
-                {2, 2, 2, 1, 1, 1, 2},
-                {1, 2, 1, 1, 2, 2, 2},
-                {1, 1, 2, 2, 1, 1, 1}
-        };
-        assertTrue(game.fullGame(fullGame));
+        int winner2 = game.diagonalWinner(diagonalWinner2);
+        assertEquals(winner2, 1);
     }
 
     @Test
@@ -106,7 +108,8 @@ public class GameTest {
                 {0, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 0}
         };
-        assertTrue(game.winGame(winner));
+        Pair lastPlacedPiece = new Pair(5, 1);
+        assertTrue(game.winGame(winner, lastPlacedPiece));
     }
 
     @Test
@@ -119,7 +122,8 @@ public class GameTest {
                 {0, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 0}
         };
-        assertTrue(game.endGame(gameEnder));
+        Pair lastPlacedPiece = new Pair(5, 1);
+        assertTrue(game.endGame(gameEnder, lastPlacedPiece, 5));
     }
 
     @Test
@@ -132,8 +136,10 @@ public class GameTest {
                 {0, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 0}
         };
-        game.winGame(winner);
-        assertEquals(1, game.getWinner());
+        Pair lastPlacedPiece = new Pair(5, 1);
+        game.winGame(winner, lastPlacedPiece);
+        game.setGameBoard(winner);
+        assertEquals(1, game.getWinner(game.getGameBoard(), lastPlacedPiece));
     }
 
     @Test
@@ -155,5 +161,22 @@ public class GameTest {
 
         int col3 = game.findLowestEmptyRow(game.getGameBoard(), 3);
         assertEquals(col3, 4);
+    }
+
+    @Test
+    public void testGetValidColumns() {
+        int[][] board = {
+                {0, 1, 0, 1, 0, 0, 0},
+                {0, 1, 0, 0, 0, 0, 0},
+                {0, 1, 0, 0, 0, 0, 0},
+                {0, 1, 0, 0, 0, 0, 0},
+                {0, 1, 0, 0, 0, 0, 0},
+                {0, 1, 0, 1, 1, 1, 0}
+        };
+
+        List<Integer> validColumns = new ArrayList<>(Arrays.asList(0, 2, 4, 5, 6));
+        List<Integer> methodTester = game.getValidColumns(board);
+        Collections.sort(methodTester);
+        assertEquals(validColumns, methodTester);
     }
 }
