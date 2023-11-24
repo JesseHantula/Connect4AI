@@ -3,6 +3,7 @@ package core;
 import constants.Constants;
 import models.AI;
 import models.Game;
+import models.Pair;
 import ui.GameScreen;
 import ui.StartScreen;
 
@@ -15,12 +16,16 @@ public class GameManager {
     public boolean playerTurn;
     public Game game;
     public AI ai;
+    public Pair lastPlacedPiece;
+    public int pieceCount;
 
     public GameManager(Integer startState) {
         this.state = startState;
         this.screen = new JFrame(Constants.gameTitle);
         this.playerNumber = 0;
         this.screen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.pieceCount = 0;
+        this.lastPlacedPiece = new Pair(-1, -1);
     }
 
     public void setState(Integer newState) {
@@ -43,6 +48,12 @@ public class GameManager {
 
     public boolean getPlayerTurn() { return playerTurn; }
 
+    public void setLastPlacedPiece(Pair newLastPlacedPiece) { lastPlacedPiece = newLastPlacedPiece; }
+
+    public Pair getLastPlacedPiece() { return lastPlacedPiece; }
+    public void updatePieceCount() { pieceCount++; }
+    public int getPieceCount() { return pieceCount; }
+
     public void update() {
         if (state == 0) { //state 0 indicates the start screen should be launched
             StartScreen startScreen = new StartScreen(screen, this);
@@ -59,7 +70,7 @@ public class GameManager {
     }
 
     public void gameLoop(GameScreen gameScreen) {
-        if (game.endGame(game.getGameBoard())) { //check to see if the game has ended via draw or win
+        if (pieceCount > 6 && game.endGame(game.getGameBoard(), getLastPlacedPiece(), getPieceCount())) { //check to see if the game has ended via draw or win
             gameScreen.updateBoard(); //update game board before handling the end
             handleEnd(gameScreen);
         }
@@ -67,22 +78,20 @@ public class GameManager {
             gameScreen.initBoard();
         }
         else {
-            int col = ai.calculate(game); //get the column that the AI chose
-            if (!gameScreen.piecePlaced(col, getPlayerTurn())) //this method will not be needed once AI is good
+            int col = ai.calculate(game, getLastPlacedPiece(), getPieceCount()); //get the column that the AI chose
+            Pair slot = gameScreen.piecePlaced(col, false);
+            setLastPlacedPiece(slot);
+            if (game.endGame(game.getGameBoard(), slot, getPieceCount()))
                 gameLoop(gameScreen);
-            else {
-                if (game.endGame(game.getGameBoard()))
-                    gameLoop(gameScreen);
-                gameScreen.updateBoard();
-            }
+            gameScreen.updateBoard();
         }
     }
 
     public void handleEnd(GameScreen gameScreen) {
-        if (game.fullGame(game.getGameBoard())) //check to see if the game ended in a draw (the game board is full)
+        if (game.fullGame(getPieceCount())) //check to see if the game ended in a draw (the game board is full)
             gameScreen.drawPopup();
         else { //if the game did not end in a draw, there was a winner
-            gameScreen.winnerPopup(game.getWinner() == getPlayerNumber()); //check if player or AI won
+            gameScreen.winnerPopup(game.getWinner(game.getGameBoard(), getLastPlacedPiece()) == getPlayerNumber()); //check if player or AI won
         }
     }
 }

@@ -11,6 +11,7 @@ public class Game {
     public int numCols;
     public AI ai;
     public int winner;
+    public int pieceCount;
 
     public Game(Integer playerNumber) {
         this.playerNumber = playerNumber;
@@ -19,6 +20,7 @@ public class Game {
         this.numCols = 7;
         this.gameBoard = new int[6][7];
         this.ai = new AI(aiNumber);
+        this.pieceCount = 0;
     }
 
     public int[][] getGameBoard() {
@@ -31,74 +33,79 @@ public class Game {
         return ai;
     }
 
-    public boolean endGame(int[][] gameBoard) {
-        return winGame(gameBoard) || fullGame(gameBoard);
+    public boolean endGame(int[][] gameBoard, Pair lastPlacedPiece, int pieceCount) {
+        return (winGame(gameBoard, lastPlacedPiece) || fullGame(pieceCount));
     }
 
-    public boolean winGame(int[][] gameBoard) {
-        return rowWinner(gameBoard) || columnWinner(gameBoard) || diagonalWinner(gameBoard);
+    public boolean winGame(int[][] gameBoard, Pair lastPlacedPiece) {
+        return (rowWinner(gameBoard, lastPlacedPiece) != null) ||
+                (columnWinner(gameBoard, lastPlacedPiece) != null) ||
+                (diagonalWinner(gameBoard) != null);
     }
 
-    public int getWinner() { return winner; }
+    public int getWinner(int[][] gameBoard, Pair lastPlacedPiece) {
+        if (rowWinner(gameBoard, lastPlacedPiece) != null)
+            return rowWinner(gameBoard, lastPlacedPiece);
+        else if (columnWinner(gameBoard, lastPlacedPiece) != null)
+            return columnWinner(gameBoard, lastPlacedPiece);
+        else if (diagonalWinner(gameBoard) != null)
+            return diagonalWinner(gameBoard);
+        return 0;
+    }
 
-    public boolean rowWinner(int[][] gameBoard) { //check to see if a game has been won via 4 consecutive pieces in a row
-        for (int[] row : gameBoard) {
-            int streak = 0;
-            int curr = 0;
-            for (int square : row) {
-                if (square == 0) {
-                    streak = 0;
-                    curr = 0;
-                } else if (curr == 0) {
+    public Integer rowWinner(int[][] gameBoard, Pair lastPlacedPiece) { //check to see if a game has been won via 4 consecutive pieces in a row
+        int row = lastPlacedPiece.getRow();
+        int streak = 0;
+        int curr = 0;
+        for (int square : gameBoard[row]) {
+            if (square == 0) {
+                streak = 0;
+                curr = 0;
+            } else if (curr == 0) {
+                curr = square;
+                streak = 1;
+            } else {
+                if (square == curr)
+                    streak++;
+                else {
+                    streak = 1;
                     curr = square;
-                    streak = 1;
-                } else {
-                    if (square == curr)
-                        streak++;
-                    else {
-                        streak = 1;
-                        curr = square;
-                    }
-                }
-                if (streak == 4) {
-                    winner = curr;
-                    return true;
                 }
             }
+            if (streak == 4) {
+                return curr;
+            }
         }
-        return false;
+        return null;
     }
 
-    public boolean columnWinner(int[][] gameBoard) { //check to see if a game has been won via 4 consecutive pieces in a column
-        int cols = gameBoard[0].length;
-        for (int col = 0; col < cols; col++) {
-            int streak = 0;
-            int curr = 0;
-            for (int[] ints : gameBoard) {
-                if (ints[col] == 0) {
-                    streak = 0;
-                    curr = 0;
-                } else if (curr == 0) {
+    public Integer columnWinner(int[][] gameBoard, Pair lastPlacedPiece) { //check to see if a game has been won via 4 consecutive pieces in a column
+        int col = lastPlacedPiece.getColumn();
+        int streak = 0;
+        int curr = 0;
+        for (int[] ints : gameBoard) {
+            if (ints[col] == 0) {
+                streak = 0;
+                curr = 0;
+            } else if (curr == 0) {
+                curr = ints[col];
+                streak = 1;
+            } else {
+                if (ints[col] == curr) {
+                    streak++;
+                    if (streak == 4) {
+                        return curr;
+                    }
+                } else {
+                    streak = 1;
                     curr = ints[col];
-                    streak = 1;
-                } else {
-                    if (ints[col] == curr) {
-                        streak++;
-                        if (streak == 4) {
-                            winner = curr;
-                            return true;
-                        }
-                    } else {
-                        streak = 1;
-                        curr = ints[col];
-                    }
                 }
             }
         }
-        return false;
+        return null;
     }
 
-    public boolean diagonalWinner(int[][] gameBoard) { //check to see if a game has been won via 4 consecutive pieces in a diagonal
+    public Integer diagonalWinner(int[][] gameBoard) { //check to see if a game has been won via 4 consecutive pieces in a diagonal
         int rows = gameBoard.length;
         int cols = gameBoard[0].length;
 
@@ -108,8 +115,7 @@ public class Game {
                         && gameBoard[row][col] == gameBoard[row + 1][col + 1]
                         && gameBoard[row][col] == gameBoard[row + 2][col + 2]
                         && gameBoard[row][col] == gameBoard[row + 3][col + 3]) {
-                    winner = gameBoard[row][col];
-                    return true;
+                    return gameBoard[row][col];
                 }
             }
         }
@@ -120,23 +126,12 @@ public class Game {
                         && gameBoard[row][col] == gameBoard[row + 1][col - 1]
                         && gameBoard[row][col] == gameBoard[row + 2][col - 2]
                         && gameBoard[row][col] == gameBoard[row + 3][col - 3]) {
-                    winner = gameBoard[row][col];
-                    return true;
+                    return gameBoard[row][col];
                 }
             }
         }
 
-        return false;
-    }
-
-    public boolean fullGame(int[][] gameBoard) { //check to see if the gameboard is full
-        for (int[] row : gameBoard) {
-            for (int square : row) {
-                if (square == 0)
-                    return false;
-            }
-        }
-        return true;
+        return null;
     }
 
     public int findLowestEmptyRow(int[][] gameBoard, int col) { //find the lowest empty row for a column
@@ -148,18 +143,18 @@ public class Game {
         return -1; //return -1 if the column is full
     }
 
-    public int[] getValidColumns(int[][] gameBoard) {
+    public List<Integer> getValidColumns(int[][] gameBoard) {
+        int[] colOrder = {3, 2, 4, 1, 5, 0, 6}; //start with more important columns, this helps alpha-beta pruning
         List<Integer> validColumns = new ArrayList<>();
-        for (int col = 0; col < numCols; col++) {
-            if (findLowestEmptyRow(gameBoard, col) != -1)
-                validColumns.add(col);
+        for (int col = 0; col < colOrder.length; col++) {
+            int column = colOrder[col];
+            if (gameBoard[0][column] == 0)
+                validColumns.add(column);
         }
+        return validColumns;
+    }
 
-        int[] validColumnsArray = new int[validColumns.size()];
-        for (int i = 0; i < validColumnsArray.length; i++) {
-            validColumnsArray[i] = validColumns.get(i);
-        }
-
-        return validColumnsArray;
+    public boolean fullGame(int pieceCount) {
+        return pieceCount == 42;
     }
 }

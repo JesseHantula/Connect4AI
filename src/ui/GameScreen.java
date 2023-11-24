@@ -2,6 +2,7 @@ package ui;
 
 import core.GameManager;
 import models.Game;
+import models.Pair;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -50,8 +51,11 @@ public class GameScreen extends JPanel {
             buttons[i].addActionListener(
                     e -> {
                         int col = Integer.parseInt(e.getActionCommand());
-                        if (piecePlaced(col, gameManager.getPlayerTurn()))
+                        Pair piecePlaced = piecePlaced(col, gameManager.getPlayerTurn());
+                        if (piecePlaced != null) {
+                            gameManager.setLastPlacedPiece(piecePlaced);
                             gameManager.gameLoop(GameScreen.this);
+                        }
                     });
             panel.add(buttons[i]);
         }
@@ -68,15 +72,16 @@ public class GameScreen extends JPanel {
         screen.setVisible(true);
     }
 
-    public boolean piecePlaced(Integer column, boolean isPlayer) { //method for updating board when a piece is placed
+    public Pair piecePlaced(Integer column, boolean isPlayer) { //method for updating board when a piece is placed
         int row = game.findLowestEmptyRow(gameBoard, column);
         if (row != -1) {
             gameBoard[row][column] = isPlayer ? gameManager.getPlayerNumber() : gameManager.getAiNumber();
             game.setGameBoard(gameBoard);
             gameManager.setPlayerTurn(!isPlayer);
-            return true; //returns true to indicate a piece was successfully placed
+            gameManager.updatePieceCount();
+            return new Pair(row, column); //returns true to indicate a piece was successfully placed
         }
-        return false; //returns false to indicate that a piece was not placed due to column being full
+        return null; //returns false to indicate that a piece was not placed due to column being full
     }
 
     public void updateBoard() { //method that updates game board whenever a piece is placed

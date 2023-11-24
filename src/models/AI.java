@@ -1,78 +1,82 @@
 package models;
 
-import java.util.Random;
+import java.util.List;
 
 public class AI {
     public static final int rows = 6;
     public static final int cols = 7;
     public static int aiNumber;
     public static int playerNumber;
-    public static final int MAX_VALUE = 999999;
-    public static final int MIN_VALUE = -999999;
-    public static Random random = new Random();
+    public static final int MAX_VALUE = 9999999;
+    public static final int MIN_VALUE = -9999999;
 
     public AI(Integer aiNumber) {
         AI.aiNumber = aiNumber;
         playerNumber = aiNumber == 1 ? 2 : 1;
     }
 
-    public int calculate(Game game) {
-        return minimax(game, game.getGameBoard(), 4, true)[0];
+    public int calculate(Game game, Pair lastPlacedPiece, int pieceCount) {
+        return minimax(game, game.getGameBoard(), 6, true, MIN_VALUE, MAX_VALUE, lastPlacedPiece, pieceCount)[0];
     }
 
-    public static int[] minimax(Game game, int[][] gameboard, int depth, boolean maximizingPlayer) {
-        int[] valid_columns = game.getValidColumns(gameboard);
-
-        if (depth == 0 || game.endGame(gameboard)) {
-            if (game.endGame(gameboard)) {
-                if (game.getWinner() == aiNumber)
+    public static int[] minimax(Game game, int[][] gameboard, int depth, boolean maximizingPlayer, int alpha, int beta, Pair lastPlacedPiece, int pieceCount) {
+        List<Integer> valid_columns = game.getValidColumns(gameboard);
+        if (depth == 0 || (pieceCount > 6 && game.endGame(gameboard, lastPlacedPiece, pieceCount))) {
+            if (game.endGame(gameboard, lastPlacedPiece, pieceCount)) {
+                if (game.getWinner(gameboard, lastPlacedPiece) == aiNumber)
                     return new int[]{-1, MAX_VALUE};
-                else if (game.getWinner() == playerNumber)
+                else if (game.getWinner(gameboard, lastPlacedPiece) == playerNumber)
                     return new int[]{-1, MIN_VALUE};
                 else {
                     return new int[]{-1, 0};
                 }
             }
             else {
-                return new int[]{-1, evaluateBoard(gameboard, aiNumber)};
+                return new int[]{-1, evaluateBoard(gameboard, aiNumber, depth)};
             }
         }
         if (maximizingPlayer) {
-            int bestCol = valid_columns[random.nextInt(valid_columns.length)];
+            int bestCol = valid_columns.get(0);
             int maxEval = MIN_VALUE;
-            for (int col = 0; col < cols; col++) {
+            for (int col : valid_columns) {
                 int[][] newBoard = copyBoard(gameboard);
                 int row = game.findLowestEmptyRow(newBoard, col);
-                if (row != -1) {
-                    newBoard[row][col] = aiNumber;
-                    int eval = minimax(game, newBoard, depth - 1, false)[1];
-                    if (eval > maxEval) {
-                        maxEval = eval;
-                        bestCol = col;
-                    }
+                newBoard[row][col] = aiNumber;
+                pieceCount++;
+                lastPlacedPiece.update(row, col);
+                int eval = minimax(game, newBoard, depth - 1, false, alpha, beta, lastPlacedPiece, pieceCount)[1];
+                if (eval > maxEval) {
+                    maxEval = eval;
+                    bestCol = col;
                 }
+                alpha = Math.max(alpha, maxEval);
+                if (alpha >= beta)
+                    break;
             }
             return new int[]{bestCol, maxEval};
         } else {
-            int bestCol = valid_columns[random.nextInt(valid_columns.length)];
+            int bestCol = valid_columns.get(0);
             int minEval = MAX_VALUE;
-            for (int col = 0; col < cols; col++) {
+            for (int col : valid_columns) {
                 int[][] newBoard = copyBoard(gameboard);
                 int row = game.findLowestEmptyRow(newBoard, col);
-                if (row != -1) {
-                    newBoard[row][col] = playerNumber;
-                    int eval = minimax(game, newBoard, depth - 1, true)[1];
-                    if (eval < minEval) {
-                        minEval = eval;
-                        bestCol = col;
-                    }
+                newBoard[row][col] = playerNumber;
+                pieceCount++;
+                lastPlacedPiece.update(row, col);
+                int eval = minimax(game, newBoard, depth - 1, true, alpha, beta, lastPlacedPiece, pieceCount)[1];
+                if (eval < minEval) {
+                    minEval = eval;
+                    bestCol = col;
                 }
+                beta = Math.min(beta, minEval);
+                if (beta < alpha)
+                    break;
             }
             return new int[]{bestCol, minEval};
         }
     }
 
-    public static int evaluateBoard(int[][] gameboard, int number) {
+    public static int evaluateBoard(int[][] gameboard, int number, int depth) {
         int score = 0;
 
         // Evaluate middle column
