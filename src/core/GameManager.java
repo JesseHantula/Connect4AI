@@ -12,7 +12,7 @@ import javax.swing.JFrame;
 public class GameManager {
     public int state;
     public int playerNumber;
-    public JFrame screen;
+    public final JFrame screen;
     public boolean playerTurn;
     public Game game;
     public AI ai;
@@ -59,7 +59,7 @@ public class GameManager {
             StartScreen startScreen = new StartScreen(screen, this);
             startScreen.createStartScreen();
         }
-        else if (state == 1) { //state 1 indicates the game has started and the game screen should be launced
+        else if (state == 1) { //state 1 indicates the game has started and the game screen should be launched
             game = new Game(playerNumber); //makes a new game with player number
             GameScreen gameScreen = new GameScreen(screen, 6, 7, this, game);
             ai = game.getAi();
@@ -88,10 +88,9 @@ public class GameManager {
     }
 
     public void handleEnd(GameScreen gameScreen) {
-        if (game.fullGame(getPieceCount())) //check to see if the game ended in a draw (the game board is full)
-            gameScreen.drawPopup();
-        else { //if the game did not end in a draw, there was a winner
+        if (game.winGame(game.getGameBoard(), getLastPlacedPiece())) //check to see if the game ended with a winner
             gameScreen.winnerPopup(game.getWinner(game.getGameBoard(), getLastPlacedPiece()) == getPlayerNumber()); //check if player or AI won
-        }
+        else  //if the game did not end with a winner, then it was a draw
+            gameScreen.drawPopup();
     }
 }

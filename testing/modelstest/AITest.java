@@ -103,4 +103,37 @@ public class AITest {
         int col = ai.calculate(game, lastPlacedPiece, 34);
         assertEquals(col, 5);
     }
+
+    @Test
+    public void testAI_Random() {
+        int[][] gameBoard = {
+                {0, 0, 1, 1, 2, 1, 0},
+                {0, 0, 2, 1, 1, 2, 0},
+                {0, 0, 2, 2, 2, 1, 0},
+                {0, 0, 1, 2, 2, 2, 0},
+                {2, 1, 1, 1, 2, 1, 0},
+                {2, 1, 2, 2, 1, 1, 2}
+        };
+        game.setGameBoard(gameBoard);
+        Pair lastPlacedPiece = new Pair(4, 0);
+        int col = ai.calculate(game, lastPlacedPiece, 29);
+        assertEquals(col, 1);
+    }
+
+    @Test
+    public void testAI_VictoryAtDepth0() {
+        int[][] gameBoard = {
+                {0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 1, 0, 0, 0},
+                {0, 0, 0, 1, 0, 0, 0},
+                {0, 0, 0, 1, 2, 2, 2}
+        };
+        game.setGameBoard(gameBoard);
+        Pair lastPlacedPiece = new Pair(5, 6);
+        ai.setDepth(0);
+        int col = ai.calculate(game, lastPlacedPiece, 6);
+        assertEquals(col, 3);
+    }
 }

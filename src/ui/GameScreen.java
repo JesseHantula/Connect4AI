@@ -15,14 +15,14 @@ import java.awt.Color;
 import java.awt.GridLayout;
 
 public class GameScreen extends JPanel {
-    public int[][] gameBoard;
-    public int numRows;
-    public int numCols;
-    public JFrame screen;
-    public GameManager gameManager;
+    public final int[][] gameBoard;
+    public final int numRows;
+    public final int numCols;
+    public final JFrame screen;
+    public final GameManager gameManager;
     public JLabel[][] slots;
     public JButton[] buttons;
-    public Game game;
+    public final Game game;
     public boolean started;
 
     public GameScreen(JFrame screen, int numRows, int numCols, GameManager gameManager, Game game) {
@@ -35,7 +35,7 @@ public class GameScreen extends JPanel {
         this.started = false;
     }
 
-    public void initBoard() { //method to initalize the game screen
+    public void initBoard() { //method to initialize the game screen
         UIUtils.resetScreen(screen);
 
         JPanel panel = (JPanel) screen.getContentPane();

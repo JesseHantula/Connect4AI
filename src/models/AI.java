@@ -9,37 +9,40 @@ public class AI {
     public static int playerNumber;
     public static final int MAX_VALUE = 9999999;
     public static final int MIN_VALUE = -9999999;
+    public int depth = 6;
 
     public AI(Integer aiNumber) {
         AI.aiNumber = aiNumber;
         playerNumber = aiNumber == 1 ? 2 : 1;
     }
 
+    public void setDepth(int newDepth) { depth = newDepth; }
+
     public int calculate(Game game, Pair lastPlacedPiece, int pieceCount) {
-        return minimax(game, game.getGameBoard(), 6, true, MIN_VALUE, MAX_VALUE, lastPlacedPiece, pieceCount)[0];
+        return minimax(game, game.getGameBoard(), depth, true, MIN_VALUE, MAX_VALUE, lastPlacedPiece, pieceCount)[0];
     }
 
-    public static int[] minimax(Game game, int[][] gameboard, int depth, boolean maximizingPlayer, int alpha, int beta, Pair lastPlacedPiece, int pieceCount) {
-        List<Integer> valid_columns = game.getValidColumns(gameboard);
-        if (depth == 0 || (pieceCount > 6 && game.endGame(gameboard, lastPlacedPiece, pieceCount))) {
-            if (game.endGame(gameboard, lastPlacedPiece, pieceCount)) {
-                if (game.getWinner(gameboard, lastPlacedPiece) == aiNumber)
+    public static int[] minimax(Game game, int[][] gameBoard, int depth, boolean maximizingPlayer, int alpha, int beta, Pair lastPlacedPiece, int pieceCount) {
+        List<Integer> valid_columns = game.getValidColumns(gameBoard);
+        if (depth == 0 || (pieceCount > 6 && game.endGame(gameBoard, lastPlacedPiece, pieceCount))) {
+            if (game.endGame(gameBoard, lastPlacedPiece, pieceCount)) {
+                if (game.getWinner(gameBoard, lastPlacedPiece) == aiNumber)
                     return new int[]{-1, MAX_VALUE};
-                else if (game.getWinner(gameboard, lastPlacedPiece) == playerNumber)
+                else if (game.getWinner(gameBoard, lastPlacedPiece) == playerNumber)
                     return new int[]{-1, MIN_VALUE};
                 else {
                     return new int[]{-1, 0};
                 }
             }
             else {
-                return new int[]{-1, evaluateBoard(gameboard, aiNumber, depth)};
+                return new int[]{-1, evaluateBoard(gameBoard, aiNumber)};
             }
         }
         if (maximizingPlayer) {
             int bestCol = valid_columns.get(0);
             int maxEval = MIN_VALUE;
             for (int col : valid_columns) {
-                int[][] newBoard = copyBoard(gameboard);
+                int[][] newBoard = copyBoard(gameBoard);
                 int row = game.findLowestEmptyRow(newBoard, col);
                 newBoard[row][col] = aiNumber;
                 pieceCount++;
@@ -58,7 +61,7 @@ public class AI {
             int bestCol = valid_columns.get(0);
             int minEval = MAX_VALUE;
             for (int col : valid_columns) {
-                int[][] newBoard = copyBoard(gameboard);
+                int[][] newBoard = copyBoard(gameBoard);
                 int row = game.findLowestEmptyRow(newBoard, col);
                 newBoard[row][col] = playerNumber;
                 pieceCount++;
@@ -76,32 +79,32 @@ public class AI {
         }
     }
 
-    public static int evaluateBoard(int[][] gameboard, int number, int depth) {
+    public static int evaluateBoard(int[][] gameBoard, int number) {
         int score = 0;
 
         // Evaluate middle column
         for(int i = 0; i < rows; i++)
-            score += gameboard[i][3] == number ? 1 : 0;
+            score += gameBoard[i][3] == number ? 1 : 0;
 
         // Evaluate horizontal score
-        score += evaluateDirection(gameboard, number, 0, 1);
+        score += evaluateDirection(gameBoard, number, 0, 1);
 
         // Evaluate vertical score
-        score += evaluateDirection(gameboard, number, 1, 0);
+        score += evaluateDirection(gameBoard, number, 1, 0);
 
         // Evaluate diagonal scores
-        score += evaluateDirection(gameboard, number, 1, 1); // diagonal top-left to bottom-right
-        score += evaluateDirection(gameboard, number, 1, -1); // diagonal bottom-left to top-right
+        score += evaluateDirection(gameBoard, number, 1, 1); // diagonal top-left to bottom-right
+        score += evaluateDirection(gameBoard, number, 1, -1); // diagonal bottom-left to top-right
 
         return score;
     }
 
-    public static int evaluateDirection(int[][] gameboard, int number, int rowDir, int colDir) {
+    public static int evaluateDirection(int[][] gameBoard, int number, int rowDir, int colDir) {
         int score = 0;
 
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
-                if (gameboard[row][col] == number) {
+                if (gameBoard[row][col] == number) {
                     // Check for consecutive pieces in the specified direction
                     int consecutiveCount = 0;
                     for (int k = 0; k < 4; k++) {
@@ -110,7 +113,7 @@ public class AI {
 
                         // Check if the position is within bounds
                         if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols) {
-                            if (gameboard[newRow][newCol] == number) {
+                            if (gameBoard[newRow][newCol] == number) {
                                 consecutiveCount++;
                             } else {
                                 break;

@@ -4,23 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
-    public int playerNumber;
-    public int aiNumber;
+    public final int aiNumber;
     public int[][] gameBoard;
-    public int numRows;
-    public int numCols;
-    public AI ai;
-    public int winner;
-    public int pieceCount;
+    public final int numRows;
+    public final AI ai;
 
     public Game(Integer playerNumber) {
-        this.playerNumber = playerNumber;
         this.aiNumber = playerNumber == 1 ? 2 : 1;
         this.numRows = 6;
-        this.numCols = 7;
         this.gameBoard = new int[6][7];
         this.ai = new AI(aiNumber);
-        this.pieceCount = 0;
     }
 
     public int[][] getGameBoard() {
@@ -146,8 +139,7 @@ public class Game {
     public List<Integer> getValidColumns(int[][] gameBoard) {
         int[] colOrder = {3, 2, 4, 1, 5, 0, 6}; //start with more important columns, this helps alpha-beta pruning
         List<Integer> validColumns = new ArrayList<>();
-        for (int col = 0; col < colOrder.length; col++) {
-            int column = colOrder[col];
+        for (int column : colOrder) {
             if (gameBoard[0][column] == 0)
                 validColumns.add(column);
         }

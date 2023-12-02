@@ -11,8 +11,8 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 
 public class StartScreen {
-    protected JFrame startScreen;
-    protected GameManager gameManager;
+    protected final JFrame startScreen;
+    protected final GameManager gameManager;
 
     public StartScreen(JFrame startScreen, GameManager gameManager) {
         this.startScreen = startScreen;
