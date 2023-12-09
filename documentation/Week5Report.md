@@ -1,3 +1,5 @@
+# Week 5 Report
+
 Unfortunately, due to a busy schedule this week, I was unable to get much done regarding my project. Apart from doing the required peer review, the only things I did were improve code quality and testing (although testing update was not pushed yet, read below).
 
 The first thing I did was improve the quality of my code. I did this using a built-in feature of InteliJ IDEA, which allows you to inspect the code in your project and gives warnings regarding thiings such as: unused variables, typos, unused methods, etc. Using this feature allowed me to improve the quality of my code drastically.
