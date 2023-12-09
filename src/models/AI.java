@@ -9,7 +9,7 @@ public class AI {
     public static int playerNumber;
     public static final int MAX_VALUE = 9999999;
     public static final int MIN_VALUE = -9999999;
-    public int depth = 6;
+    public int depth = 8;
 
     public AI(Integer aiNumber) {
         AI.aiNumber = aiNumber;
