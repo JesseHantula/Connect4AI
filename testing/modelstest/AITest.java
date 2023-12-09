@@ -76,7 +76,6 @@ public class AITest {
     /*
     Tests to see if AI can spot basic defensive moves to prevent a loss
      */
-
     @Test
     public void testAI_ColDefense() {
         int[][] gameBoard =
@@ -131,7 +130,6 @@ public class AITest {
     /*
     Tests to make sure AI can find wins at certain depths
      */
-
     @Test
     public void testAI_VictoryAtDepth0() {
         int[][] gameBoard = {
