@@ -13,7 +13,7 @@ To run the project, simply clone the repository, navigate to the src directory, 
 - [Testing Document](./documentation/TestingDocument.md)
 - [Implementation Document](./documentation/Implementation.md)
 
-Weekly reports:
+#### Weekly reports:
 - [Week 1](./documentation/Week1Report.md)
 - [Week 2](./documentation/Week2Report.md)
 - [Week 3](./documentation/Week3Report.md)
