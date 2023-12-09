@@ -8,13 +8,15 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+/*
+Class that tests AI model (performance tests)
+ */
 public class AITest {
     private AI ai;
     private Game game;
 
     @Before
-    public void setUp() {
-        // Set up the GameManager object before each test
+    public void setUp() { // Set up the GameManager object before each test
         game = new Game(2);
         ai = new AI(1);
     }

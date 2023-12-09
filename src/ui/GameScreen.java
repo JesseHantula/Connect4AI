@@ -14,6 +14,9 @@ import javax.swing.border.LineBorder;
 import java.awt.Color;
 import java.awt.GridLayout;
 
+/*
+Class that creates the game screen UI
+ */
 public class GameScreen extends JPanel {
     public final int[][] gameBoard;
     public final int numRows;
@@ -25,6 +28,9 @@ public class GameScreen extends JPanel {
     public final Game game;
     public boolean started;
 
+    /*
+    Takes in screen (reuses the start screen), number of rows, number of columns, game manager, and game
+     */
     public GameScreen(JFrame screen, int numRows, int numCols, GameManager gameManager, Game game) {
         this.numRows = numRows;
         this.numCols = numCols;
@@ -35,11 +41,14 @@ public class GameScreen extends JPanel {
         this.started = false;
     }
 
-    public void initBoard() { //method to initialize the game screen
-        UIUtils.resetScreen(screen);
+    /*
+    Method to initialize the game screen
+     */
+    public void initBoard() {
+        UIUtils.resetScreen(screen); //resets screen (makes it blank)
 
         JPanel panel = (JPanel) screen.getContentPane();
-        panel.setLayout(new GridLayout(numRows + 1, numCols));
+        panel.setLayout(new GridLayout(numRows + 1, numCols)); //make grid layout
 
         slots = new JLabel[numRows][numCols];
         buttons = new JButton[numCols];
@@ -52,12 +61,12 @@ public class GameScreen extends JPanel {
                     e -> {
                         int col = Integer.parseInt(e.getActionCommand());
                         Pair piecePlaced = piecePlaced(col, gameManager.getPlayerTurn());
-                        if (piecePlaced != null) {
+                        if (piecePlaced != null) { //checks that column is not full
                             gameManager.setLastPlacedPiece(piecePlaced);
                             gameManager.gameLoop(GameScreen.this);
                         }
                     });
-            panel.add(buttons[i]);
+            panel.add(buttons[i]); //adds buttons that player can use to choose column for placing a piece
         }
 
         for (int row = 0; row < numRows; row++) { //sets up the game board grid
@@ -72,19 +81,25 @@ public class GameScreen extends JPanel {
         screen.setVisible(true);
     }
 
-    public Pair piecePlaced(Integer column, boolean isPlayer) { //method for updating board when a piece is placed
+    /*
+    method for updating game board (array) when a piece is placed
+     */
+    public Pair piecePlaced(Integer column, boolean isPlayer) {
         int row = game.findLowestEmptyRow(gameBoard, column);
         if (row != -1) {
             gameBoard[row][column] = isPlayer ? gameManager.getPlayerNumber() : gameManager.getAiNumber();
             game.setGameBoard(gameBoard);
             gameManager.setPlayerTurn(!isPlayer);
             gameManager.updatePieceCount();
-            return new Pair(row, column); //returns true to indicate a piece was successfully placed
+            return new Pair(row, column); //returns the pair to indicate a piece was successfully placed
         }
-        return null; //returns false to indicate that a piece was not placed due to column being full
+        return null; //returns null to indicate that a piece was not placed due to column being full
     }
 
-    public void updateBoard() { //method that updates game board whenever a piece is placed
+    /*
+    method that updates game board (UI) when a piece is placed
+     */
+    public void updateBoard() {
         if (started) {
             for (int row = 0; row < numRows; row++) {
                 for (int col = 0; col < numCols; col++) {
@@ -104,7 +119,10 @@ public class GameScreen extends JPanel {
         }
     }
 
-    public void drawPopup() { //creates popup window for a tie game
+    /*
+    Method that creates popup window for a tie game
+     */
+    public void drawPopup() {
         int choice = JOptionPane.showConfirmDialog(screen, "Play again?", "Tie game!", JOptionPane.YES_NO_OPTION);
 
         if (choice == JOptionPane.YES_OPTION) { //starts new game
@@ -117,7 +135,9 @@ public class GameScreen extends JPanel {
         }
     }
 
-
+    /*
+    Method that creates popup window for a won game
+     */
     public void winnerPopup(boolean playerWinner) { //creates popup window for a won game
         int choice;
         if (playerWinner) //window for if player won

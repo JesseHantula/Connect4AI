@@ -14,6 +14,9 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+/*
+Class that tests Game model
+ */
 public class GameTest {
     private Game game;
     private GameManager gameManager;

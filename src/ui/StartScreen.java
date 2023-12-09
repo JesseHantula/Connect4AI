@@ -10,16 +10,25 @@ import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.FlowLayout;
 
+/*
+Class that creates the start screen UI
+ */
 public class StartScreen {
     protected final JFrame startScreen;
     protected final GameManager gameManager;
 
+    /*
+    Takes in startScreen JFrame and game manager as params
+     */
     public StartScreen(JFrame startScreen, GameManager gameManager) {
         this.startScreen = startScreen;
         this.gameManager = gameManager;
     }
 
-    public void createStartScreen() { //method to initialize the start screen
+    /*
+    Method to initialize the start screen
+     */
+    public void createStartScreen() {
         startScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         startScreen.setSize(Constants.startScreenWidth, Constants.startScreenHeight);
         startScreen.setLocationRelativeTo(null);
@@ -53,14 +62,20 @@ public class StartScreen {
         startScreen.setVisible(true);
     }
 
-    private void redButtonClicked() { //if player chooses red button (player 1)
+    /*
+    Method that is called if player chooses red button (player 1)
+     */
+    private void redButtonClicked() {
         gameManager.setPlayerNumber(1);
         gameManager.setPlayerTurn(true);
         gameManager.setState(1);
         gameManager.update();
     }
 
-    private void blueButtonClicked() { //if player chooses blue button (player 2)
+    /*
+    Method that is called if player chooses blue button (player 2)
+     */
+    private void blueButtonClicked() {
         gameManager.setPlayerNumber(2);
         gameManager.setPlayerTurn(false);
         gameManager.setState(1);

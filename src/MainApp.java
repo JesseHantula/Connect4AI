@@ -1,5 +1,8 @@
 import core.GameManager;
 
+/*
+Main class
+ */
 public class MainApp {
     public MainApp() {
 

@@ -5,6 +5,9 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+/*
+Class that tests GameManager
+ */
 public class GameManagerTest {
     private GameManager gameManager;
 
