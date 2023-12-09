@@ -4,3 +4,7 @@ out/
 # Ignore the htmlReport directory
 htmlReport/*
 !htmlreport/index.html
+
+#Miscellaneous
+.DS_Store
+.idea
