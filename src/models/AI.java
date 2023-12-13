@@ -39,6 +39,16 @@ public class AI {
     }
 
     /*
+    Function used for testing. Instead of returning column int as in calculate function, returns evaluation instead
+    @param game The current game model
+    @param lastPlacedPiece The location of the last placed piece
+    @param pieceCount The current number of pieces on the game board
+     */
+    public int getEval(Game game, Pair lastPlacedPiece, int pieceCount) {
+        return minimax(game, game.getGameBoard(), depth, true, MIN_VALUE, MAX_VALUE, lastPlacedPiece, pieceCount)[1];
+    }
+
+    /*
     Minimax function, uses recursion to find the best move for the AI
     @param game The current game model
     @param gameBoard The current game board
@@ -68,11 +78,11 @@ public class AI {
         if (maximizingPlayer) { //If AI's turn
             int bestCol = valid_columns.get(0); //Get first valid column (columns are ordered from middle to ends)
             int maxEval = MIN_VALUE;
+            pieceCount++;
             for (int col : valid_columns) {
                 int[][] newBoard = copyBoard(gameBoard);
                 int row = game.findLowestEmptyRow(newBoard, col); //Finds lowest row that is empty for the column
                 newBoard[row][col] = aiNumber;
-                pieceCount++;
                 lastPlacedPiece.update(row, col);
                 int eval = minimax(game, newBoard, depth - 1, false, alpha, beta, lastPlacedPiece, pieceCount)[1];
                 if (eval > maxEval) { //updates evaluation of the position (if necessary)
@@ -87,11 +97,11 @@ public class AI {
         } else { //If player's turn
             int bestCol = valid_columns.get(0);
             int minEval = MAX_VALUE;
+            pieceCount++;
             for (int col : valid_columns) {
                 int[][] newBoard = copyBoard(gameBoard);
                 int row = game.findLowestEmptyRow(newBoard, col);
                 newBoard[row][col] = playerNumber;
-                pieceCount++;
                 lastPlacedPiece.update(row, col);
                 int eval = minimax(game, newBoard, depth - 1, true, alpha, beta, lastPlacedPiece, pieceCount)[1];
                 if (eval < minEval) {
