@@ -19,6 +19,7 @@ public class AITest {
     public void setUp() { // Set up the GameManager object before each test
         game = new Game(2);
         ai = new AI(1);
+        ai.setDepth(8);
     }
 
     /*
@@ -186,23 +187,6 @@ public class AITest {
         assertEquals(col, 2);
     }
 
-    @Test
-    public void testAI_VictoryAfter3Moves() {
-        int[][] gameBoard = {
-                {0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0},
-                {0, 1, 0, 1, 0, 0, 0},
-                {0, 2, 0, 2, 0, 0, 0},
-                {0, 2, 0, 1, 1, 0, 0},
-                {1, 2, 0, 1, 2, 2, 0}
-        };
-        game.setGameBoard(gameBoard);
-        Pair lastPlacedPiece = new Pair(5, 6);
-        int col = ai.calculate(game, lastPlacedPiece, 14);
-        assertEquals(col, 5);
-    }
-
-
     /*
     Tests to check speed of algorithm at given depths
      */
@@ -309,5 +293,85 @@ public class AITest {
         long executionTime = endTime - startTime;
         assertTrue(executionTime >= 0);
         System.out.println("Time taken for depth 12 (ms): " + executionTime);
+    }
+
+    /*
+    Tests to make sure board evaluation is correct for positions
+     */
+
+    @Test
+    public void testAI_EvalWinIn3Moves() {
+        int[][] gameBoard = {
+                {0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0},
+                {0, 1, 0, 1, 0, 0, 0},
+                {0, 2, 0, 2, 0, 0, 0},
+                {0, 2, 0, 1, 1, 1, 0},
+                {2, 2, 0, 1, 1, 2, 2}
+        };
+        game.setGameBoard(gameBoard);
+        Pair lastPlacedPiece = new Pair(5, 6);
+        int eval = ai.getEval(game, lastPlacedPiece, 14);
+        assertEquals(eval, AI.MAX_VALUE);
+    }
+
+    @Test
+    public void testAI_EvalWinIn7Moves() {
+        int[][] gameBoard = {
+                {2, 2, 0, 2, 1, 1, 0},
+                {1, 1, 0, 1, 2, 2, 0},
+                {1, 1, 0, 2, 2, 1, 2},
+                {2, 2, 0, 1, 1, 2, 2},
+                {1, 1, 0, 2, 1, 2, 2},
+                {1, 2, 0, 1, 1, 2, 1}
+        };
+        game.setGameBoard(gameBoard);
+        ai.setDepth(7);
+        Pair lastPlacedPiece = new Pair(2, 6);
+        //Let's simulate the game to see that the moves and evaluations are correct.
+        int eval = ai.getEval(game, lastPlacedPiece, 34);
+        int col = ai.calculate(game, lastPlacedPiece, 34);
+        assertEquals(eval, AI.MAX_VALUE);
+        assertEquals(col, 6);
+        //Make a move as the player, update gameboard
+        gameBoard = new int[][]{
+                {2, 2, 0, 2, 1, 1, 2},
+                {1, 1, 0, 1, 2, 2, 1},
+                {1, 1, 0, 2, 2, 1, 2},
+                {2, 2, 0, 1, 1, 2, 2},
+                {1, 1, 0, 2, 1, 2, 2},
+                {1, 2, 0, 1, 1, 2, 1}
+        };
+        game.setGameBoard(gameBoard);
+        lastPlacedPiece.update(0, 6);
+        //Make sure evaluation is still winning (column is not needed, since only 1 available)
+        eval = ai.getEval(game, lastPlacedPiece, 36);
+        assertEquals(eval, AI.MAX_VALUE);
+        //Do this again
+        gameBoard = new int[][]{
+                {2, 2, 0, 2, 1, 1, 2},
+                {1, 1, 0, 1, 2, 2, 1},
+                {1, 1, 0, 2, 2, 1, 2},
+                {2, 2, 0, 1, 1, 2, 2},
+                {1, 1, 2, 2, 1, 2, 2},
+                {1, 2, 1, 1, 1, 2, 1}
+        };
+        game.setGameBoard(gameBoard);
+        lastPlacedPiece.update(4, 2);
+        eval = ai.getEval(game, lastPlacedPiece, 38);
+        assertEquals(eval, AI.MAX_VALUE);
+        //One more time
+        gameBoard = new int[][]{
+                {2, 2, 0, 2, 1, 1, 2},
+                {1, 1, 0, 1, 2, 2, 1},
+                {1, 1, 2, 2, 2, 1, 2},
+                {2, 2, 1, 1, 1, 2, 2},
+                {1, 1, 2, 2, 1, 2, 2},
+                {1, 2, 1, 1, 1, 2, 1}
+        };
+        game.setGameBoard(gameBoard);
+        lastPlacedPiece.update(2, 2);
+        eval = ai.getEval(game, lastPlacedPiece, 40);
+        assertEquals(eval, AI.MAX_VALUE);
     }
 }
