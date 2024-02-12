@@ -12,7 +12,7 @@ public class AI {
     public static int playerNumber;
     public static final int MAX_VALUE = 9999999;
     public static final int MIN_VALUE = -9999999;
-    public int depth = 8;
+    public int depth = 9;
 
     /*
     Takes in aiNumber as a param, so that the AI knows which number to play as
@@ -109,7 +109,7 @@ public class AI {
                     bestCol = col;
                 }
                 beta = Math.min(beta, minEval);
-                if (beta < alpha)
+                if (alpha >= beta)
                     break;
             }
             return new int[]{bestCol, minEval};
@@ -123,20 +123,27 @@ public class AI {
      */
     public static int evaluateBoard(int[][] gameBoard) {
         int score = 0;
+        int playerNumber = aiNumber == 1 ? 2 : 1;
 
         // Evaluate middle column
-        for(int i = 0; i < rows; i++)
+        for(int i = 0; i < rows; i++) {
             score += gameBoard[i][3] == aiNumber ? 1 : 0;
+            score -= gameBoard[i][3] == playerNumber ? 1 : 0;
+        }
 
         // Evaluate vertical score
         score += evaluateDirection(gameBoard, aiNumber, 0, 1);
+        score -= evaluateDirection(gameBoard, playerNumber, 0, 1);
 
         // Evaluate horizontal score
         score += evaluateDirection(gameBoard, aiNumber, 1, 0);
+        score -= evaluateDirection(gameBoard, playerNumber, 1, 0);
 
         // Evaluate diagonal scores
         score += evaluateDirection(gameBoard, aiNumber, 1, 1); // diagonal top-left to bottom-right
+        score -= evaluateDirection(gameBoard, playerNumber, 1, 1);
         score += evaluateDirection(gameBoard, aiNumber, 1, -1); // diagonal bottom-left to top-right
+        score -= evaluateDirection(gameBoard, playerNumber, 1, -1);
 
         return score; //returns evaluation
     }
